@@ -61,10 +61,13 @@ func main() {
 	}
 
 	conf, err := configuration.NewConfiguration(*config)
+	fmt.Printf(string(conf))
+
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
 	}
+	os.Exit(0)
 	sh, err := scheduler.NewScheduler(conf)
 	if err != nil {
 		log.Error(err.Error())

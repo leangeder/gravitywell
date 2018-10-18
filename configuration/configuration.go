@@ -8,6 +8,10 @@ import (
 )
 
 type Cluster struct {
+	Replicas int `yaml:"replicas"`
+}
+
+type ClusterDeployment struct {
 	Name        string `yaml:"Name"`
 	Deployments []struct {
 		Deployment struct {
@@ -31,10 +35,21 @@ type Cluster struct {
 
 //Configuration ...
 type Configuration struct {
-	APIVersion string `yaml:"APIVersion"`
-	Strategy   []struct {
-		Cluster Cluster `yaml:"Cluster"`
-	} `yaml:"Strategy"`
+	Kind       string      `yaml:"Kind"`
+	APIVersion string      `yaml:"APIVersion"`
+	Spec       interface{} `yaml:"Spec"`
+}
+
+type ClusterConfiguration struct {
+	Kind       string  `yaml:"Kind"`
+	APIVersion string  `yaml:"APIVersion"`
+	Spec       Cluster `yaml:"Spec"`
+}
+
+type ClusterDeploymentConfiguration struct {
+	Kind       string            `yaml:"Kind"`
+	APIVersion string            `yaml:"APIVersion"`
+	Spec       ClusterDeployment `yaml:"Spec"`
 }
 
 //NewConfiguration creates a deserialised yaml object
@@ -48,6 +63,12 @@ func NewConfiguration(conf string) (*Configuration, error) {
 	if err != nil {
 		log.Printf("Failed to validate syntax: %s", conf)
 		return nil, err
+	}
+
+	if c.Kind == "Cluster" {
+		c.Spec = c.Spec.(Cluster)
+	} else if c.Kind == "ClusterDeployment" {
+		c.Spec = c.Spec.(ClusterDeployment)
 	}
 	return &c, nil
 }

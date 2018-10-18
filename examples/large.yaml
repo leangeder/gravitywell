@@ -7,7 +7,7 @@ Strategy:
         - Deployment:
            Name: "jenkins"
            Namespace: "jenkins"
-           Git: "git@github.com:AlexsJones/devops-kubernetes-jenkins.git"
+           Git: "git@github.com:leangeder/devops-kubernetes-jenkins.git"
            Action:
             - Execute:
                Shell: ""
@@ -21,7 +21,7 @@ Strategy:
         - Deployment:
            Name: "SomeCompany-preview"
            Namespace: "preview"
-           Git: "git@github.com:AlexsJones/devops-kubernetes-SomeCompany.git"
+           Git: "git@github.com:leangeder/devops-kubernetes-SomeCompany.git"
            Action:
             - Execute:
                Shell: "./build_environment.sh preview"
@@ -31,7 +31,7 @@ Strategy:
         - Deployment:
            Name: "tika"
            Namespace: "tika"
-           Git: "https://github.com/AlexsJones/devops-kubernetes-tika.git"
+           Git: "https://github.com/leangeder/devops-kubernetes-tika.git"
            Action:
             - Execute:
                Shell: "./build_environment.sh default"
@@ -45,7 +45,7 @@ Strategy:
         - Deployment:
            Name: "queue"
            Namespace: "queue"
-           Git: "https://github.com/AlexsJones/devops-kubernetes-queue.git"
+           Git: "https://github.com/leangeder/devops-kubernetes-queue.git"
            Action:
             - Execute:
                Shell: "./build_environment.sh preview"
@@ -55,7 +55,7 @@ Strategy:
         - Deployment:
            Name: "cron"
            Namespace: "service-cron"
-           Git: "https://github.com/AlexsJones/devops-kubernetes-scheduler.git"
+           Git: "https://github.com/leangeder/devops-kubernetes-scheduler.git"
            Action:
             - Execute:
                Shell: "./build_environment.sh preview"
@@ -89,7 +89,7 @@ Strategy:
         - Deployment:
            Name: "SomeCompany-pre-production"
            Namespace: "pre-production"
-           Git: "https://github.com/AlexsJones/devops-kubernetes-SomeCompany.git"
+           Git: "https://github.com/leangeder/devops-kubernetes-SomeCompany.git"
            Action:
             - Execute:
                Shell: "./build_environment.sh pre-production"
@@ -99,7 +99,7 @@ Strategy:
         - Deployment:
            Name: "tika"
            Namespace: "tika"
-           Git: "https://github.com/AlexsJones/devops-kubernetes-tika.git"
+           Git: "https://github.com/leangeder/devops-kubernetes-tika.git"
            Action:
             - Execute:
                Shell: "./build_environment.sh default"
@@ -113,7 +113,7 @@ Strategy:
         - Deployment:
            Name: "queue"
            Namespace: "queue"
-           Git: "https://github.com/AlexsJones/devops-kubernetes-queue.git"
+           Git: "https://github.com/leangeder/devops-kubernetes-queue.git"
            Action:
             - Execute:
                Shell: "./build_environment.sh pre-production"
@@ -123,7 +123,7 @@ Strategy:
         - Deployment:
            Name: "cron"
            Namespace: "service-cron"
-           Git: "https://github.com/AlexsJones/devops-kubernetes-scheduler.git"
+           Git: "https://github.com/leangeder/devops-kubernetes-scheduler.git"
            Action:
             - Execute:
                Shell: "./build_environment.sh pre-production"
@@ -157,7 +157,7 @@ Strategy:
         - Deployment:
            Name: "SomeCompany-production"
            Namespace: "production"
-           Git: "https://github.com/AlexsJones/devops-kubernetes-SomeCompany.git"
+           Git: "https://github.com/leangeder/devops-kubernetes-SomeCompany.git"
            Action:
             - Execute:
                Shell: "./build_environment.sh production"
@@ -167,7 +167,7 @@ Strategy:
         - Deployment:
            Name: "tika"
            Namespace: "tika"
-           Git: "https://github.com/AlexsJones/devops-kubernetes-tika.git"
+           Git: "https://github.com/leangeder/devops-kubernetes-tika.git"
            Action:
             - Execute:
                Shell: "./build_environment.sh default"
@@ -181,7 +181,7 @@ Strategy:
         - Deployment:
            Name: "queue"
            Namespace: "queue"
-           Git: "https://github.com/AlexsJones/devops-kubernetes-queue.git"
+           Git: "https://github.com/leangeder/devops-kubernetes-queue.git"
            Action:
             - Execute:
                Shell: "./build_environment.sh production"
@@ -191,7 +191,7 @@ Strategy:
         - Deployment:
            Name: "cron"
            Namespace: "service-cron"
-           Git: "https://github.com/AlexsJones/devops-kubernetes-scheduler.git"
+           Git: "https://github.com/leangeder/devops-kubernetes-scheduler.git"
            Action:
             - Execute:
                Shell: "./build_environment.sh production"

@@ -8,10 +8,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/AlexsJones/gravitywell/configuration"
-	"github.com/AlexsJones/gravitywell/scheduler"
 	log "github.com/Sirupsen/logrus"
 	"github.com/dimiro1/banner"
+	"github.com/leangeder/gravitywell/configuration"
+	//	"github.com/leangeder/gravitywell/scheduler"
 )
 
 const ban string = `
@@ -38,10 +38,10 @@ func main() {
 
 	banner.Init(os.Stdout, true, true, bytes.NewBufferString(ban))
 	redeploy := flag.Bool("redeploy", false, "Forces a delete and deploy overriding all kubectl commands. WARNING: Destructive")
-	tryUpdate := flag.Bool("try-update", false, "Try to update the resource if possible")
-	ignoreList := flag.String("ignore-list", "", "A comma delimited list of clusters to ignore")
-	sshkeypath := flag.String("ssh-key-path", "", "Provide to override default sshkey used")
-	dryRun := flag.Bool("dry-run", false, "Run a dry run deployment to test what is deployment")
+	// tryUpdate := flag.Bool("try-update", false, "Try to update the resource if possible")
+	//ignoreList := flag.String("ignore-list", "", "A comma delimited list of clusters to ignore")
+	//sshkeypath := flag.String("ssh-key-path", "", "Provide to override default sshkey used")
+	//dryRun := flag.Bool("dry-run", false, "Run a dry run deployment to test what is deployment")
 	config := flag.String("config", "", "Configuration path")
 	flag.Parse()
 
@@ -61,14 +61,14 @@ func main() {
 	}
 
 	conf, err := configuration.NewConfiguration(*config)
-	fmt.Printf(string(conf))
+	fmt.Println("---------  conf.Kind")
+	fmt.Println(conf.Kind)
 
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
 	}
-	os.Exit(0)
-	sh, err := scheduler.NewScheduler(conf)
+	/*sh, err := scheduler.NewScheduler(conf)
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
@@ -84,5 +84,5 @@ func main() {
 		log.Warn(err.Error())
 		os.Exit(1)
 	}
-
+	*/
 }

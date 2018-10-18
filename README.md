@@ -17,11 +17,11 @@ _Or using --dryrun to test your deployment status_
 
 ## Installation
 
-`go get github.com/AlexsJones/gravitywell`
+`go get github.com/leangeder/gravitywell`
 
 ## Requirements
 
-`go get github.com/AlexsJones/vortex`
+`go get github.com/leangeder/vortex`
 
 ## Example overview Manifest
 
@@ -42,7 +42,7 @@ Strategy:
         - Deployment:
            Name: "kubernetes-nifi-cluster"
            Namespace: "nifi"
-           Git: "https://github.com/AlexsJones/kubernetes-nifi-cluster.git"
+           Git: "https://github.com/leangeder/kubernetes-nifi-cluster.git"
            Action:
             - Execute:
                Shell: "ls -la"
@@ -52,7 +52,7 @@ Strategy:
         - Deployment:
             Name: "kubernetes-zookeeper-cluster"
             Namespace: "zk"
-            Git: "https://github.com/AlexsJones/kubernetes-zookeeper-cluster.git"
+            Git: "https://github.com/leangeder/kubernetes-zookeeper-cluster.git"
             Action:
              - Execute:
                 Shell: "./build_environment.sh small"

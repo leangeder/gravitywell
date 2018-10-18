@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/AlexsJones/gravitywell/configuration"
-	"github.com/AlexsJones/gravitywell/state"
+	"github.com/leangeder/gravitywell/configuration"
+	"github.com/leangeder/gravitywell/state"
 	log "github.com/Sirupsen/logrus"
 	"github.com/fatih/color"
 	"k8s.io/api/core/v1"

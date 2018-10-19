@@ -1,3 +1,4 @@
+Kind: Application
 APIVersion: "v1"
 Strategy:
 #Build

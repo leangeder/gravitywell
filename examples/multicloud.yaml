@@ -1,57 +1,37 @@
 ---
-apiVersion: extensions/v1beta1
-kind: Cluster
-metadata:
-  name: es-client
-  labels:
-    app: es-client
-    component: elasticsearch
-    role: services
-spec:
-  replicas: 1
-  template:
-    spec:
-      serviceaccountName: cluster-account
-      providers:
-      - name: gke
-        project: trials
-        version: 1.9.7
-        image: cos
-        region: europe-west2
+ApiVersion: extensions/v1beta1
+Kind: Cluster
+Metadata:
+  Name: es-client
+  Labels:
+    App: es-client
+    Component: elasticsearch
+    Role: services
+Spec:
+  Replicas: 1
+  Template:
+    Spec:
+      ServiceaccountName: cluster-account
+      Providers:
+      - Name: gke
+        Project: trials
+        Version: 1.9.7
+        Image: cos
+        Region: europe-west2
         # zone: europe-west2-a
-        network: default
-        dashboard: true
-        monitoring: true
-        autoscaling: true
-        bootdisk: 100GB
-        localssd: 
-        nodePools:
-        - name: toto
-          nodePerZone: 1
-          nodeType: n1-standard-2
-          image: ubuntu
-        - name: toto
-          nodePerZone: 1
-          nodeType: n1-standard-2
-          image: ubuntu
+        Network: default
+        Dashboard: true
+        Monitoring: true
+        Autoscaling: true
+        Bootdisk: 100GB
+        Localssd: 
+        NodePools:
+        - Name: toto
+          NodePerZone: 1
+          NodeType: n1-standard-2
+          Image: ubuntu
+        - Name: toto
+          NodePerZone: 1
+          NodeType: n1-standard-2
+          Image: ubuntu
 
-      - name: aws
-        version: 1.9.7
-        image: cos
-        region:
-          - europe-west2
-        network: default
-        dashboard: true
-        monitoring: true
-        autoscaling: true
-        bootdisk: 100GB
-        localssd: 
-        nodePools:
-          - name: toto
-            nodePerZone: 1
-            nodeType: n1-standard-2
-            image: ubuntu
-      - name: toto
-        nodePerZone: 1
-        nodeType: n1-standard-2
-        image: ubuntu 

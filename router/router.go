@@ -2,6 +2,7 @@ package router
 
 import (
 	"fmt"
+	"github.com/leangeder/gravitywell/api"
 	"github.com/leangeder/gravitywell/configuration"
 )
 
@@ -18,8 +19,18 @@ func Run(verb string, generalConfig *configuration.GeneralConfig) {
 	switch *routerPath {
 	case RouterPath{verb: "apply", kind: "Cluster"}:
 		fmt.Println("Apply cluster")
+		clusterConf := &configuration.ClusterConfig{
+			Kind:       generalConfig.Kind,
+			APIVersion: generalConfig.APIVersion,
+		}
+		api.ClusterApply(clusterConf)
 	case RouterPath{verb: "apply", kind: "Application"}:
 		fmt.Println("Apply Application")
+		appConf := &configuration.ApplicationConfig{
+			Kind:       generalConfig.Kind,
+			APIVersion: generalConfig.APIVersion,
+		}
+		api.ApplicationApply(appConf)
 	default:
 		fmt.Println("Route not recognize")
 	}

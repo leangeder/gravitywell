@@ -11,7 +11,7 @@ type Cluster struct {
 	Replicas int `yaml:"replicas"`
 }
 
-type ClusterDeployment struct {
+type Application struct {
 	Name        string `yaml:"Name"`
 	Deployments []struct {
 		Deployment struct {
@@ -46,10 +46,10 @@ type ClusterConfig struct {
 	Spec       Cluster `yaml:"Spec"`
 }
 
-type ClusterDeploymentConfig struct {
-	Kind       string            `yaml:"Kind"`
-	APIVersion string            `yaml:"APIVersion"`
-	Spec       ClusterDeployment `yaml:"Spec"`
+type ApplicationConfig struct {
+	Kind       string      `yaml:"Kind"`
+	APIVersion string      `yaml:"APIVersion"`
+	Spec       Application `yaml:"Spec"`
 }
 
 //NewConfiguration creates a deserialised yaml object

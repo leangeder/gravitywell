@@ -10,6 +10,8 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/dimiro1/banner"
+	"github.com/leangeder/gravitywell/configuration"
+	"github.com/leangeder/gravitywell/router"
 	//	"github.com/leangeder/gravitywell/scheduler"
 )
 
@@ -60,9 +62,6 @@ func main() {
 	}
 
 	conf, err := configuration.NewConfiguration(*config)
-	fmt.Println("---------  conf.Kind")
-	fmt.Println(conf.Kind)
-
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)

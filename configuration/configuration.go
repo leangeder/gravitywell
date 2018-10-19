@@ -34,31 +34,31 @@ type ClusterDeployment struct {
 }
 
 //Configuration ...
-type Configuration struct {
+type GeneralConfig struct {
 	Kind       string      `yaml:"Kind"`
 	APIVersion string      `yaml:"APIVersion"`
 	Spec       interface{} `yaml:"Spec"`
 }
 
-type ClusterConfiguration struct {
+type ClusterConfig struct {
 	Kind       string  `yaml:"Kind"`
 	APIVersion string  `yaml:"APIVersion"`
 	Spec       Cluster `yaml:"Spec"`
 }
 
-type ClusterDeploymentConfiguration struct {
+type ClusterDeploymentConfig struct {
 	Kind       string            `yaml:"Kind"`
 	APIVersion string            `yaml:"APIVersion"`
 	Spec       ClusterDeployment `yaml:"Spec"`
 }
 
 //NewConfiguration creates a deserialised yaml object
-func NewConfiguration(conf string) (*Configuration, error) {
+func NewConfiguration(conf string) (*GeneralConfig, error) {
 	bytes, err := ioutil.ReadFile(conf)
 	if err != nil {
 		return nil, err
 	}
-	c := Configuration{}
+	c := GeneralConfig{}
 	err = yaml.Unmarshal(bytes, &c)
 	if err != nil {
 		log.Printf("Failed to validate syntax: %s", conf)

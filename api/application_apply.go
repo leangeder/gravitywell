@@ -7,6 +7,4 @@ import (
 
 func ApplicationApply(config *configuration.ApplicationConfig) {
 	fmt.Println("ApplicationApply called")
-	fmt.Println(config.Spec.Name)
-
 }

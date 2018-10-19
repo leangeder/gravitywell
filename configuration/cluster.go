@@ -13,18 +13,17 @@ type ClusterConfig struct {
 }
 
 type ClusterSpec struct {
-	Replicas *int32               `yaml:"Replicas"`
+	Replicas int32                `yaml:"Replicas"`
 	Template ProviderTemplateSpec `yaml:"Template"`
 }
 
 type ProviderTemplateSpec struct {
-	ObjectMeta
-	Spec ProviderSpec
+	Spec ProviderSpec `yaml:"Spec"`
 }
 
 type ProviderSpec struct {
-	ServiceAccountName string `yaml:"ServiceAccountName"`
-	Providers          []Provider
+	ServiceAccountName string     `yaml:"ServiceAccountName"`
+	Providers          []Provider `yaml:"Providers"`
 }
 
 type Provider struct {
@@ -40,7 +39,7 @@ type Provider struct {
 	Autoscaling string     `yaml:"Autoscaling"`
 	BootDisk    string     `yaml:"BootDisk"`
 	LocalDisk   string     `yaml:"LocalDisk"`
-	NodePools   []NodePool `yaml:"Nodepools"`
+	NodePools   []NodePool `yaml:"NodePools"`
 	// Command                []string             `yaml:"command`
 	// Args                   []string             `yaml:"args`
 	// WorkingDir             string               `yaml:"workingDir`
@@ -57,8 +56,8 @@ type Provider struct {
 }
 
 type NodePool struct {
-	Name    string `yaml:"Name"`
-	Replica int32  `yaml:"Replica"`
-	Type    string `yaml:"Type"`
-	Image   string `yaml:"Image"`
+	Name         string `yaml:"Name"`
+	NodesPerZone int32  `yaml:"NodesPerZone"`
+	Type         string `yaml:"Type"`
+	Image        string `yaml:"Image"`
 }

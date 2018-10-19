@@ -1,11 +1,11 @@
 package router
 
 import (
+	"errors"
 	"fmt"
 	"github.com/leangeder/gravitywell/api"
 	"github.com/leangeder/gravitywell/configuration"
 	yaml "gopkg.in/yaml.v2"
-	"log"
 )
 
 type RouterPath struct {
@@ -21,24 +21,12 @@ func Run(verb string, generalConfig *configuration.GeneralConfig) {
 	switch *routerPath {
 	case RouterPath{verb: "apply", kind: "Cluster"}:
 		fmt.Println("Apply cluster")
-		bytes, err := yaml.Marshal(generalConfig.Spec)
+		conf, err := MapToClusterConfig(generalConfig)
 		if err != nil {
-			log.Printf("Failed to marshal Spec")
+			fmt.Println("Error mapping clusterConfig:", err.Error())
 			return
 		}
-		spec := configuration.ClusterSpec{}
-		err = yaml.Unmarshal(bytes, &spec)
-		if err != nil {
-			log.Printf("Failed to unmarshal Spec")
-			return
-		}
-
-		clusterConf := &configuration.ClusterConfig{
-			Kind:       generalConfig.Kind,
-			APIVersion: generalConfig.APIVersion,
-			Spec:       spec,
-		}
-		api.ClusterApply(*clusterConf)
+		api.ClusterApply(*conf)
 	case RouterPath{verb: "apply", kind: "Application"}:
 		fmt.Println("Apply Application")
 		appConf := &configuration.ApplicationConfig{
@@ -49,4 +37,34 @@ func Run(verb string, generalConfig *configuration.GeneralConfig) {
 	default:
 		fmt.Println("Route not recognize")
 	}
+}
+
+func MapToClusterConfig(conf *configuration.GeneralConfig) (*configuration.ClusterConfig, error) {
+	bytes, err := yaml.Marshal(conf.Spec)
+	if err != nil {
+		return nil, errors.New("Failed to marshal Spec")
+	}
+	spec := configuration.ClusterSpec{}
+	err = yaml.Unmarshal(bytes, &spec)
+	if err != nil {
+		return nil, errors.New("Failed to unmarshal Spec")
+	}
+
+	bytes, err = yaml.Marshal(conf.Metadata)
+	if err != nil {
+		return nil, errors.New("Failed to marshal Metadata")
+	}
+	metadata := configuration.ObjectMeta{}
+	err = yaml.Unmarshal(bytes, &metadata)
+	if err != nil {
+		return nil, errors.New("Failed to unmarshal Metadata")
+	}
+
+	clusterConf := &configuration.ClusterConfig{
+		Kind:       conf.Kind,
+		Metadata:   metadata,
+		APIVersion: conf.APIVersion,
+		Spec:       spec,
+	}
+	return clusterConf, nil
 }

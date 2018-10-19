@@ -10,27 +10,27 @@ Spec:
   Replicas: 1
   Template:
     Spec:
-      ServiceaccountName: cluster-account
+      ServiceAccountName: cluster-account
       Providers:
       - Name: gke
         Project: trials
         Version: 1.9.7
         Image: cos
         Region: europe-west2
-        # zone: europe-west2-a
+        # Zone: europe-west2-a
         Network: default
         Dashboard: true
         Monitoring: true
         Autoscaling: true
         Bootdisk: 100GB
-        Localssd: 
+        LocalDisk: "bla"
         NodePools:
         - Name: toto
-          NodePerZone: 1
-          NodeType: n1-standard-2
+          NodesPerZone: 1
+          Type: n1-standard-2
           Image: ubuntu
         - Name: toto
-          NodePerZone: 1
-          NodeType: n1-standard-2
+          NodesPerZone: 1
+          Type: n1-standard-2
           Image: ubuntu
 

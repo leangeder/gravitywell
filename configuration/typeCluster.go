@@ -1,24 +1,20 @@
-package typeCluster
+package configuration
 
 type ObjectMeta struct {
-	Name   string            `yaml:"name"`
-	Labels map[string]string `yaml:"labels"`
+	Name   string            `yaml:"Name"`
+	Labels map[string]string `yaml:"Labels"`
 }
 
-type TypeMeta struct {
-	Kind       string `yaml:"kind"`
-	APIVersion string `yaml:"apiVersion"`
-}
-
-type Cluster struct {
-	TypeMeta   `yaml:","`
-	ObjectMeta `yaml:"metadata`
-	Spec       ClusterSpec `yaml:"spec"`
+type ClusterConfig struct {
+	Kind       string      `yaml:"Kind"`
+	APIVersion string      `yaml:"APIVersion"`
+	Metadata   ObjectMeta  `yaml:"Metadata`
+	Spec       ClusterSpec `yaml:"Spec"`
 }
 
 type ClusterSpec struct {
-	Replicas *int32               `yaml:"replicas"`
-	Template ProviderTemplateSpec `yaml:"template"`
+	Replicas *int32               `yaml:"Replicas"`
+	Template ProviderTemplateSpec `yaml:"Template"`
 }
 
 type ProviderTemplateSpec struct {
@@ -27,24 +23,24 @@ type ProviderTemplateSpec struct {
 }
 
 type ProviderSpec struct {
-	ServiceAccountName `yaml:"serviceAccountName"`
+	ServiceAccountName string `yaml:"ServiceAccountName"`
 	Providers          []Provider
 }
 
 type Provider struct {
-	Name        string     `yaml:"name"`
-	Project     string     `yaml:"project"`
-	Version     string     `yaml:"version"`
-	Image       string     `yaml:"image`
-	Region      string     `yaml:"region`
-	Zone        string     `yaml:"zone`
-	Network     string     `yaml:"network"`
-	Dashboard   string     `yaml:"dashboard"`
-	Monitoring  string     `yaml:"monitoring"`
-	Autoscaling string     `yaml:"autoscaling"`
-	BootDisk    string     `yaml:"bootDisk"`
-	LocalDisk   string     `yaml:"localDisk"`
-	NodePools   []NodePool `yaml:"nodepools"`
+	Name        string     `yaml:"Name"`
+	Project     string     `yaml:"Project"`
+	Version     string     `yaml:"Version"`
+	Image       string     `yaml:"Image`
+	Region      string     `yaml:"Region`
+	Zone        string     `yaml:"Zone`
+	Network     string     `yaml:"Network"`
+	Dashboard   string     `yaml:"Dashboard"`
+	Monitoring  string     `yaml:"Monitoring"`
+	Autoscaling string     `yaml:"Autoscaling"`
+	BootDisk    string     `yaml:"BootDisk"`
+	LocalDisk   string     `yaml:"LocalDisk"`
+	NodePools   []NodePool `yaml:"Nodepools"`
 	// Command                []string             `yaml:"command`
 	// Args                   []string             `yaml:"args`
 	// WorkingDir             string               `yaml:"workingDir`
@@ -61,8 +57,8 @@ type Provider struct {
 }
 
 type NodePool struct {
-	Name    string `yaml:"name"`
-	Replica int32  `yaml:"replica"`
-	Type    string `yaml:"type"`
-	Image   string `yaml:"image"`
+	Name    string `yaml:"Name"`
+	Replica int32  `yaml:"Replica"`
+	Type    string `yaml:"Type"`
+	Image   string `yaml:"Image"`
 }

@@ -1,12 +1,11 @@
 ---
-ApiVersion: extensions/v1beta1
+APIVersion: extensions/v1beta1
 Kind: Cluster
 Metadata:
-  Name: es-client
+  Name: trials
   Labels:
-    App: es-client
-    Component: elasticsearch
-    Role: services
+    Redis: "true" 
+    Ingestion: "true"
 Spec:
   Replicas: 1
   Template:

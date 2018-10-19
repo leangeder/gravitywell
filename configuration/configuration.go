@@ -7,10 +7,6 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-type Cluster struct {
-	Replicas int `yaml:"replicas"`
-}
-
 type Application struct {
 	Name        string `yaml:"Name"`
 	Deployments []struct {
@@ -38,12 +34,6 @@ type GeneralConfig struct {
 	Kind       string      `yaml:"Kind"`
 	APIVersion string      `yaml:"APIVersion"`
 	Spec       interface{} `yaml:"Spec"`
-}
-
-type ClusterConfig struct {
-	Kind       string  `yaml:"Kind"`
-	APIVersion string  `yaml:"APIVersion"`
-	Spec       Cluster `yaml:"Spec"`
 }
 
 type ApplicationConfig struct {

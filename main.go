@@ -10,7 +10,6 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/dimiro1/banner"
-	"github.com/leangeder/gravitywell/configuration"
 	//	"github.com/leangeder/gravitywell/scheduler"
 )
 
@@ -68,6 +67,9 @@ func main() {
 		log.Error(err.Error())
 		os.Exit(1)
 	}
+
+	router.Run("apply", conf)
+
 	/*sh, err := scheduler.NewScheduler(conf)
 	if err != nil {
 		log.Error(err.Error())

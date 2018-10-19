@@ -17,8 +17,8 @@ spec:
         project: trials
         version: 1.9.7
         image: cos
-        region:
-        - europe-west2
+        region: europe-west2
+        # zone: europe-west2-a
         network: default
         dashboard: true
         monitoring: true

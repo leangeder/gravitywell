@@ -65,10 +65,5 @@ func NewConfiguration(conf string) (*Configuration, error) {
 		return nil, err
 	}
 
-	if c.Kind == "Cluster" {
-		c.Spec = c.Spec.(Cluster)
-	} else if c.Kind == "ClusterDeployment" {
-		c.Spec = c.Spec.(ClusterDeployment)
-	}
 	return &c, nil
 }

@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
@@ -61,13 +62,17 @@ func main() {
 		}
 	}
 
-	conf, err := configuration.NewConfiguration(*config)
+	configs, err := configuration.NewConfiguration(*config)
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
 	}
 
-	router.Run("apply", conf)
+	sort.Sort(configuration.ByKind(configs))
+
+	for _, conf := range configs {
+		router.Run("apply", conf)
+	}
 
 	/*sh, err := scheduler.NewScheduler(conf)
 	if err != nil {

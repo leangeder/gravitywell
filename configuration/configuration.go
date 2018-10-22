@@ -1,6 +1,7 @@
 package configuration
 
 import (
+	"errors"
 	"io/ioutil"
 	"log"
 	"os"
@@ -16,29 +17,35 @@ type GeneralConfig struct {
 }
 
 func NewConfiguration(conf string) ([]*GeneralConfig, error) {
-
-	file, err := os.Stat(conf)
+	path, err := os.Stat(conf)
 
 	if err != nil {
 		log.Printf("Failed to identify status of conf")
 		return nil, err
 	}
 
-	switch mode := file.Mode(); {
+	switch mode := path.Mode(); {
 	case mode.IsDir():
-		listFile, err := filepath.Glob(conf + "*")
+		files, err := ioutil.ReadDir(conf)
 		if err != nil {
 			return nil, err
 		}
 
-		for _, item := range listFile {
-			generalConf, err := GenerateFileToConf(conf + item)
+		configFiles := make([]*GeneralConfig, len(files))
+
+		for i, item := range files {
+			generalConf, err := GenerateFileToConf(conf + item.Name())
+			if err != nil {
+				return nil, errors.New("Invalid file: " + item.Name())
+			}
+			configFiles[i] = generalConf
 		}
-		return []*GeneralConfig{generalConf}, err
+		return configFiles, err
 	case mode.IsRegular():
 		generalConf, err := GenerateFileToConf(conf)
 		return []*GeneralConfig{generalConf}, err
 	}
+	return nil, errors.New("Config is not a file or a directory")
 }
 
 func GenerateFileToConf(conf string) (*GeneralConfig, error) {

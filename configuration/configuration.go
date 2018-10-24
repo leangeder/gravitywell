@@ -14,6 +14,7 @@ type GeneralConfig struct {
 	APIVersion string      `yaml:"APIVersion"`
 	Metadata   interface{} `yaml:"Metadata"`
 	Spec       interface{} `yaml:"Spec"`
+	Strategy   interface{} `yaml:"Strategy"`
 }
 
 func NewConfiguration(conf string) ([]*GeneralConfig, error) {

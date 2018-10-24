@@ -7,15 +7,15 @@ import (
 	"path/filepath"
 	"strings"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/leangeder/gravitywell/configuration"
 	"github.com/leangeder/gravitywell/platform"
 	"github.com/leangeder/gravitywell/state"
 	"github.com/leangeder/gravitywell/vcs"
-	log "github.com/Sirupsen/logrus"
 	"k8s.io/api/core/v1"
 )
 
-func process(opt configuration.Options, cluster configuration.Cluster) *state.Capture {
+func process(opt configuration.Options, cluster configuration.Application) *state.Capture {
 
 	stateCapture := &state.Capture{
 		ClusterName:     cluster.Name,

@@ -5,19 +5,19 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/leangeder/gravitywell/configuration"
-	"github.com/leangeder/gravitywell/state"
 	log "github.com/Sirupsen/logrus"
 	"github.com/fatih/color"
+	"github.com/leangeder/gravitywell/configuration"
+	"github.com/leangeder/gravitywell/state"
 )
 
 //Scheduler object ...
 type Scheduler struct {
-	configuration *configuration.Configuration
+	configuration *configuration.ApplicationConfig
 }
 
 //NewScheduler object ...
-func NewScheduler(conf *configuration.Configuration) (*Scheduler, error) {
+func NewScheduler(conf *configuration.ApplicationConfig) (*Scheduler, error) {
 	if conf == nil {
 		return nil, errors.New("Invalid configuration")
 	}

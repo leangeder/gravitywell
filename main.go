@@ -13,7 +13,6 @@ import (
 	"github.com/dimiro1/banner"
 	"github.com/leangeder/gravitywell/configuration"
 	"github.com/leangeder/gravitywell/router"
-	//	"github.com/leangeder/gravitywell/scheduler"
 )
 
 const ban string = `
@@ -40,10 +39,10 @@ func main() {
 
 	banner.Init(os.Stdout, true, true, bytes.NewBufferString(ban))
 	redeploy := flag.Bool("redeploy", false, "Forces a delete and deploy overriding all kubectl commands. WARNING: Destructive")
-	// tryUpdate := flag.Bool("try-update", false, "Try to update the resource if possible")
-	//ignoreList := flag.String("ignore-list", "", "A comma delimited list of clusters to ignore")
-	//sshkeypath := flag.String("ssh-key-path", "", "Provide to override default sshkey used")
-	//dryRun := flag.Bool("dry-run", false, "Run a dry run deployment to test what is deployment")
+	tryUpdate := flag.Bool("try-update", false, "Try to update the resource if possible")
+	ignoreList := flag.String("ignore-list", "", "A comma delimited list of clusters to ignore")
+	sshkeypath := flag.String("ssh-key-path", "", "Provide to override default sshkey used")
+	dryRun := flag.Bool("dry-run", false, "Run a dry run deployment to test what is deployment")
 	config := flag.String("config", "", "Configuration path")
 	flag.Parse()
 
@@ -70,25 +69,22 @@ func main() {
 
 	sort.Sort(configuration.ByKind(configs))
 
-	for _, conf := range configs {
-		router.Run("apply", conf)
-	}
-
-	/*sh, err := scheduler.NewScheduler(conf)
-	if err != nil {
-		log.Error(err.Error())
-		os.Exit(1)
-	}
-
 	var ignoreListAr []string
 	if *ignoreList != "" {
 		ignoreListAr = strings.Split(*ignoreList, ",")
 	}
+	opt := &configuration.Options{
+		VCS:         "git",
+		TempVCSPath: "./.gravitywell",
+		APIVersion:  "v1",
+		SSHKeyPath:  *sshkeypath,
+		DryRun:      *dryRun,
+		TryUpdate:   *tryUpdate,
+		Redeploy:    *redeploy,
+		IgnoreList:  ignoreListAr}
 
-	if err := sh.Run(configuration.Options{VCS: "git", TempVCSPath: "./.gravitywell", APIVersion: "v1", SSHKeyPath: *sshkeypath,
-		DryRun: *dryRun, TryUpdate: *tryUpdate, Redeploy: *redeploy, IgnoreList: ignoreListAr}); err != nil {
-		log.Warn(err.Error())
-		os.Exit(1)
+	for _, conf := range configs {
+		router.Run("apply", conf, opt)
 	}
-	*/
+
 }

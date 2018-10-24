@@ -13,7 +13,7 @@ type RouterPath struct {
 	kind string
 }
 
-func Run(verb string, generalConfig *configuration.GeneralConfig) {
+func Run(verb string, generalConfig *configuration.GeneralConfig, opt *configuration.Options) {
 
 	routerPath := &RouterPath{verb: verb, kind: generalConfig.Kind}
 	fmt.Println(verb, generalConfig.Kind)
@@ -29,14 +29,34 @@ func Run(verb string, generalConfig *configuration.GeneralConfig) {
 		api.ClusterApply(*conf)
 	case RouterPath{verb: "apply", kind: "Application"}:
 		fmt.Println("Apply Application")
-		appConf := &configuration.ApplicationConfig{
-			Kind:       generalConfig.Kind,
-			APIVersion: generalConfig.APIVersion,
+		conf, err := MapToApplicationConfig(generalConfig)
+		if err != nil {
+			fmt.Println("Error mapping applicationConfig:", err.Error())
+			return
 		}
-		api.ApplicationApply(appConf)
+		api.ApplicationApply(conf, opt)
 	default:
 		fmt.Println("Route not recognize")
 	}
+}
+
+func MapToApplicationConfig(conf *configuration.GeneralConfig) (*configuration.ApplicationConfig, error) {
+	bytes, err := yaml.Marshal(conf.Strategy)
+	if err != nil {
+		return nil, errors.New("Failed to marshal Strategy")
+	}
+	strategy := configuration.Strategy{}
+	err = yaml.Unmarshal(bytes, &strategy)
+	if err != nil {
+		return nil, errors.New("Failed to unmarshal Strategy")
+	}
+
+	appConf := &configuration.ApplicationConfig{
+		Kind:       conf.Kind,
+		APIVersion: conf.APIVersion,
+		Strategy:   strategy,
+	}
+	return appConf, nil
 }
 
 func MapToClusterConfig(conf *configuration.GeneralConfig) (*configuration.ClusterConfig, error) {

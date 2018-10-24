@@ -53,7 +53,7 @@ func process(opt configuration.Options, cluster configuration.Application) *stat
 		//---------------------------------
 		for _, a := range deployment.Deployment.Action {
 			if a.Execute.Shell != "" {
-				log.Warn(fmt.Sprintf("Running shell command %s\n", a.Execute.Shell))
+				log.Info(fmt.Sprintf("Running shell command %s\n", a.Execute.Shell))
 				if err := ShellCommand(a.Execute.Shell, path.Join(opt.TempVCSPath, remoteVCSRepoName), true); err != nil {
 					log.Error(err.Error())
 				}
@@ -61,7 +61,7 @@ func process(opt configuration.Options, cluster configuration.Application) *stat
 			//---------------------------------
 			var commandFlag configuration.CommandFlag
 			if a.Execute.Kubectl.Command == "" {
-				log.Warn("No Kubernetes action to run aborting (supports: create/apply/replace)")
+				log.Debug("No Kubernetes action to run aborting (supports: create/apply/replace)")
 				continue
 			}
 			switch strings.ToLower(a.Execute.Kubectl.Command) {

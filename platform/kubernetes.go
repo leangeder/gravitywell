@@ -1,17 +1,18 @@
 package platform
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/leangeder/gravitywell/configuration"
 	"github.com/leangeder/gravitywell/state"
-	log "github.com/Sirupsen/logrus"
 	"k8s.io/api/apps/v1beta1"
 	"k8s.io/api/apps/v1beta2"
 	"k8s.io/api/core/v1"
-	v1betav1 "k8s.io/api/extensions/v1beta1"
+	extenv1beta1 "k8s.io/api/extensions/v1beta1"
 	v1polbeta "k8s.io/api/policy/v1beta1"
 	v1rbac "k8s.io/api/rbac/v1"
 	"k8s.io/client-go/kubernetes"
@@ -68,9 +69,18 @@ func DeployFromFile(config *rest.Config, k kubernetes.Interface, path string, na
 		return state.EDeploymentStateError, err
 	}
 	decode := scheme.Codecs.UniversalDeserializer().Decode
-	obj, _, _ := decode(raw, nil, nil)
+	obj, versionKind, err := decode(raw, nil, nil)
+	if versionKind == nil {
+		log.Warn("Ignoring File ", path, ": it doesnt have a Kind")
+		return state.EDeploymentStateNil, nil
+	}
 
-	log.Debug(fmt.Sprintf("%++v\n\n", obj.GetObjectKind()))
+	if err != nil {
+		log.Warn("Error decoding file: " + err.Error())
+		return state.EDeploymentStateError, errors.New("Error decoding file: " + err.Error())
+	}
+
+	log.Debug(fmt.Sprintf("%++v\n", obj.GetObjectKind()))
 
 	var response state.State
 	var e error
@@ -79,8 +89,12 @@ func DeployFromFile(config *rest.Config, k kubernetes.Interface, path string, na
 		response, e = execV1Beta1DeploymentResouce(k, obj.(*v1beta1.Deployment), namespace, opts, commandFlag)
 	case *v1beta2.Deployment:
 		response, e = execV1Beta2DeploymentResouce(k, obj.(*v1beta2.Deployment), namespace, opts, commandFlag)
+	case *extenv1beta1.Deployment:
+		response, e = execExtenV1Beta1DeploymentResouce(k, obj.(*extenv1beta1.Deployment), namespace, opts, commandFlag)
 	case *v1beta1.StatefulSet:
 		response, e = execV1Beta1StatefulSetResouce(k, obj.(*v1beta1.StatefulSet), namespace, opts, commandFlag)
+	case *v1.Namespace:
+		response, e = execV1NamespaceResouce(k, obj.(*v1.Namespace), namespace, opts, commandFlag)
 	case *v1.Service:
 		response, e = execV1ServiceResouce(k, obj.(*v1.Service), namespace, opts, commandFlag)
 	case *v1.ConfigMap:
@@ -98,10 +112,10 @@ func DeployFromFile(config *rest.Config, k kubernetes.Interface, path string, na
 		response, e = exec1VRbacRoleBindingResouce(k, obj.(*v1rbac.RoleBinding), namespace, opts, commandFlag)
 	case *v1rbac.ClusterRole:
 		response, e = execV1AuthClusterRoleResouce(k, obj.(*v1rbac.ClusterRole), namespace, opts, commandFlag)
-	case *v1betav1.DaemonSet:
-		response, e = execV1Beta1DaemonSetResouce(k, obj.(*v1betav1.DaemonSet), namespace, opts, commandFlag)
+	case *extenv1beta1.DaemonSet:
+		response, e = execV1Beta1DaemonSetResouce(k, obj.(*extenv1beta1.DaemonSet), namespace, opts, commandFlag)
 	default:
-		log.Error("Unable to convert API resource")
+		log.Error(fmt.Sprintf("Unable to convert API resource, kind: %++v\n", obj.GetObjectKind()))
 	}
 
 	return response, e

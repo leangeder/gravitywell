@@ -7,59 +7,58 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/leangeder/gravitywell/configuration"
 	"github.com/leangeder/gravitywell/state"
-	"k8s.io/api/core/v1"
+	"k8s.io/api/extensions/v1beta1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 )
 
-func execV1NamespaceResouce(k kubernetes.Interface, ss *v1.Namespace, _ string, opts configuration.Options, commandFlag configuration.CommandFlag) (state.State, error) {
-	log.Debug("Found namespace resource")
-	ssclient := k.CoreV1().Namespaces()
+func execExtenV1Beta1DeploymentResouce(k kubernetes.Interface, objdep *v1beta1.Deployment, namespace string, opts configuration.Options, commandFlag configuration.CommandFlag) (state.State, error) {
+	log.Debug("Found deployment resource")
 
+	deploymentClient := k.ExtensionsV1beta1().Deployments(namespace)
 	if opts.DryRun {
-		_, err := ssclient.Get(ss.Name, v12.GetOptions{})
+		_, err := deploymentClient.Get(objdep.Name, v12.GetOptions{})
 		if err != nil {
-			log.Error(fmt.Sprintf("DRY-RUN: Namespace resource %s does not exist\n", ss.Name))
+			log.Error(fmt.Sprintf("DRY-RUN: Deployment resource %s does not exist\n", objdep.Name))
 			return state.EDeploymentStateNotExists, err
 		} else {
-			log.Debug(fmt.Sprintf("DRY-RUN: Namespace resource %s exists\n", ss.Name))
+			log.Debug(fmt.Sprintf("DRY-RUN: Deployment resource %s exists\n", objdep.Name))
 			return state.EDeploymentStateExists, nil
 		}
 	}
-
 	//Replace -------------------------------------------------------------------
 	if commandFlag == configuration.Replace {
 		log.Debug("Removing resource in preparation for redeploy")
 		graceperiod := int64(0)
-		ssclient.Delete(ss.Name, &meta_v1.DeleteOptions{GracePeriodSeconds: &graceperiod})
-		_, err := ssclient.Create(ss)
+		deploymentClient.Delete(objdep.Name, &meta_v1.DeleteOptions{GracePeriodSeconds: &graceperiod})
+		_, err := deploymentClient.Create(objdep)
 		if err != nil {
-			log.Error(fmt.Sprintf("Could not deploy Namespace resource %s due to %s", ss.Name, err.Error()))
+			log.Error(fmt.Sprintf("Could not deploy Deployment resource %s due to %s", objdep.Name, err.Error()))
 			return state.EDeploymentStateError, err
 		}
-		log.Debug("Namespace deployed")
+		log.Debug("Deployment deployed")
 		return state.EDeploymentStateOkay, nil
 	}
 	//Create ---------------------------------------------------------------------
 	if commandFlag == configuration.Create {
-		_, err := ssclient.Create(ss)
+		_, err := deploymentClient.Create(objdep)
 		if err != nil {
-			log.Error(fmt.Sprintf("Could not deploy Namespace resource %s due to %s", ss.Name, err.Error()))
+			log.Error(fmt.Sprintf("Could not deploy Deployment resource %s due to %s", objdep.Name, err.Error()))
 			return state.EDeploymentStateError, err
 		}
-		log.Debug("Namespace deployed")
+		log.Debug("Deployment deployed")
 		return state.EDeploymentStateOkay, nil
 	}
 	//Apply --------------------------------------------------------------------
 	if commandFlag == configuration.Apply {
-		_, err := ssclient.Update(ss)
+		_, err := deploymentClient.Update(objdep)
 		if err != nil {
-			log.Error("Could not update Namespace")
+			log.Error("Could not update Deployment")
 			return state.EDeploymentStateCantUpdate, err
 		}
-		log.Debug("Namespace updated")
+		log.Debug("Deployment updated")
 		return state.EDeploymentStateUpdated, nil
 	}
 	return state.EDeploymentStateNil, errors.New("No kubectl command")

@@ -80,7 +80,7 @@ func DeployFromFile(config *rest.Config, k kubernetes.Interface, path string, na
 		return state.EDeploymentStateError, errors.New("Error decoding file: " + err.Error())
 	}
 
-	log.Debug(fmt.Sprintf("%++v\n", obj.GetObjectKind()))
+	log.Debug(fmt.Sprintf("Deploying Resource Kind: %++v\n", obj.GetObjectKind()))
 
 	var response state.State
 	var e error

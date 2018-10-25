@@ -38,7 +38,7 @@ func execV1Beta1DeploymentResouce(k kubernetes.Interface, objdep *v1beta1.Deploy
 			log.Error(fmt.Sprintf("Could not deploy Deployment resource %s due to %s", objdep.Name, err.Error()))
 			return state.EDeploymentStateError, err
 		}
-		log.Debug("Deployment deployed")
+		log.Debug("Resource deployed successfully")
 		return state.EDeploymentStateOkay, nil
 	}
 	//Create ---------------------------------------------------------------------
@@ -48,7 +48,7 @@ func execV1Beta1DeploymentResouce(k kubernetes.Interface, objdep *v1beta1.Deploy
 			log.Error(fmt.Sprintf("Could not deploy Deployment resource %s due to %s", objdep.Name, err.Error()))
 			return state.EDeploymentStateError, err
 		}
-		log.Debug("Deployment deployed")
+		log.Debug("Resource deployed successfully")
 		return state.EDeploymentStateOkay, nil
 	}
 	//Apply --------------------------------------------------------------------

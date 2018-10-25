@@ -39,7 +39,7 @@ func execV1RbacRoleResouce(k kubernetes.Interface, cm *v1rbac.Role, namespace st
 			log.Error(fmt.Sprintf("Could not deploy Role resource %s due to %s", cm.Name, err.Error()))
 			return state.EDeploymentStateError, err
 		}
-		log.Debug("Deployment deployed")
+		log.Debug("Resource deployed successfully")
 		return state.EDeploymentStateOkay, nil
 	}
 	//Create ---------------------------------------------------------------------

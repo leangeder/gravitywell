@@ -60,7 +60,7 @@ func process(opt configuration.Options, cluster configuration.Application) *stat
 			stateCapture.DeploymentState[deployment.Deployment.Name] = state.Details{State: state.EDeploymentStateError}
 			return stateCapture
 		}
-		//---------------------------------
+
 		for _, a := range deployment.Deployment.Action {
 			if a.Execute.Shell != "" {
 				log.Info(fmt.Sprintf("Running shell command %s\n", a.Execute.Shell))
@@ -116,7 +116,7 @@ func process(opt configuration.Options, cluster configuration.Application) *stat
 					cm.Namespace = deployment.Deployment.Namespace
 					_, err := nsclient.Create(cm)
 					if err != nil {
-						log.Error(fmt.Sprintf("Could not deploy Namespace resource %s due to %s", cm.Name, err.Error()))
+						log.Warn(fmt.Sprintf("Could not deploy Namespace resource %s due to %s", cm.Name, err.Error()))
 					}
 				}
 				if stateResponse, err = platform.DeployFromFile(restclient, k8siface, file, deployment.Deployment.Namespace, opt, commandFlag); err != nil {

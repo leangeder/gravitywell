@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/leangeder/gravitywell/configuration"
 	"github.com/leangeder/gravitywell/state"
-	log "github.com/Sirupsen/logrus"
 	"k8s.io/api/core/v1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -15,7 +15,7 @@ import (
 )
 
 func execV1ConfigMapResouce(k kubernetes.Interface, cm *v1.ConfigMap, namespace string, opts configuration.Options, commandFlag configuration.CommandFlag) (state.State, error) {
-	log.Info("Found Configmap resource")
+	log.Debug("Found Configmap resource")
 	cmclient := k.CoreV1().ConfigMaps(namespace)
 
 	if opts.DryRun {
@@ -39,7 +39,7 @@ func execV1ConfigMapResouce(k kubernetes.Interface, cm *v1.ConfigMap, namespace 
 			log.Error(fmt.Sprintf("Could not deploy ConfigMap resource %s due to %s", cm.Name, err.Error()))
 			return state.EDeploymentStateError, err
 		}
-		log.Debug("Deployment deployed")
+		log.Debug("Resource deployed successfully")
 		return state.EDeploymentStateOkay, nil
 	}
 	//Create ---------------------------------------------------------------------

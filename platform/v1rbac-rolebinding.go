@@ -39,7 +39,7 @@ func exec1VRbacRoleBindingResouce(k kubernetes.Interface, cm *v1rbac.RoleBinding
 			log.Error(fmt.Sprintf("Could not deploy RoleBinding resource %s due to %s", cm.Name, err.Error()))
 			return state.EDeploymentStateError, err
 		}
-		log.Debug("Deployment deployed")
+		log.Debug("Resource deployed successfully")
 		return state.EDeploymentStateOkay, nil
 	}
 	//Create ---------------------------------------------------------------------

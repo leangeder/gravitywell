@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/leangeder/gravitywell/configuration"
 	"github.com/leangeder/gravitywell/state"
-	log "github.com/Sirupsen/logrus"
 	"k8s.io/api/apps/v1beta1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -55,7 +55,7 @@ func execV1Beta1DeploymentResouce(k kubernetes.Interface, objdep *v1beta1.Deploy
 	if commandFlag == configuration.Apply {
 		_, err := deploymentClient.Update(objdep)
 		if err != nil {
-			log.Error("Could not update Deployment")
+			log.Error(fmt.Sprintf("Could not apply Deployment resource %s due to %s", objdep.Name, err.Error()))
 			return state.EDeploymentStateCantUpdate, err
 		}
 		log.Debug("Deployment updated")

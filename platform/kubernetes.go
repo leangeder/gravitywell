@@ -11,6 +11,7 @@ import (
 	"github.com/leangeder/gravitywell/state"
 	"k8s.io/api/apps/v1beta1"
 	"k8s.io/api/apps/v1beta2"
+	batchv1beta1 "k8s.io/api/batch/v1beta1"
 	"k8s.io/api/core/v1"
 	extenv1beta1 "k8s.io/api/extensions/v1beta1"
 	v1polbeta "k8s.io/api/policy/v1beta1"
@@ -114,6 +115,8 @@ func DeployFromFile(config *rest.Config, k kubernetes.Interface, path string, na
 		response, e = execV1AuthClusterRoleResouce(k, obj.(*v1rbac.ClusterRole), namespace, opts, commandFlag)
 	case *extenv1beta1.DaemonSet:
 		response, e = execV1Beta1DaemonSetResouce(k, obj.(*extenv1beta1.DaemonSet), namespace, opts, commandFlag)
+	case *batchv1beta1.CronJob:
+		response, e = execV1Beta1CronJobSetResouce(k, obj.(*batchv1beta1.CronJob), namespace, opts, commandFlag)
 	default:
 		log.Error(fmt.Sprintf("Unable to convert API resource, kind: %++v\n", obj.GetObjectKind()))
 	}

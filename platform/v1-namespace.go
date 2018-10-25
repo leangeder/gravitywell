@@ -56,7 +56,7 @@ func execV1NamespaceResouce(k kubernetes.Interface, ss *v1.Namespace, _ string, 
 	if commandFlag == configuration.Apply {
 		_, err := ssclient.Update(ss)
 		if err != nil {
-			log.Error("Could not update Namespace")
+			log.Error(fmt.Sprintf("Could not apply Namespace resource %s due to %s", ss.Name, err.Error()))
 			return state.EDeploymentStateCantUpdate, err
 		}
 		log.Debug("Namespace updated")

@@ -55,7 +55,7 @@ func execExtenV1Beta1DeploymentResouce(k kubernetes.Interface, objdep *v1beta1.D
 	if commandFlag == configuration.Apply {
 		_, err := deploymentClient.Update(objdep)
 		if err != nil {
-			log.Error("Could not update Deployment")
+			log.Error(fmt.Sprintf("Could not apply Deployment resource %s due to %s", objdep.Name, err.Error()))
 			return state.EDeploymentStateCantUpdate, err
 		}
 		log.Debug("Deployment updated")

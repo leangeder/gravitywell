@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/leangeder/gravitywell/configuration"
 	"github.com/leangeder/gravitywell/state"
-	log "github.com/Sirupsen/logrus"
 	"k8s.io/api/extensions/v1beta1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -55,7 +55,7 @@ func execV1Beta1DaemonSetResouce(k kubernetes.Interface, sts *v1beta1.DaemonSet,
 	if commandFlag == configuration.Apply {
 		_, err := dsclient.UpdateStatus(sts)
 		if err != nil {
-			log.Error("Could not update Statefulset")
+			log.Error(fmt.Sprintf("Could not apply Statefulset resource %s due to %s", sts.Name, err.Error()))
 			return state.EDeploymentStateCantUpdate, err
 		}
 		log.Debug("Statefulset updated")

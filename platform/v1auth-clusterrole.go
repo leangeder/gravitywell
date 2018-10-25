@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/leangeder/gravitywell/configuration"
-	"github.com/leangeder/gravitywell/state"
 	log "github.com/Sirupsen/logrus"
 	"github.com/fatih/color"
+	"github.com/leangeder/gravitywell/configuration"
+	"github.com/leangeder/gravitywell/state"
 	auth_v1 "k8s.io/api/rbac/v1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -57,7 +57,7 @@ func execV1AuthClusterRoleResouce(k kubernetes.Interface, cm *auth_v1.ClusterRol
 	if commandFlag == configuration.Apply {
 		_, err := cmclient.Update(cm)
 		if err != nil {
-			log.Error("Could not update ClusterRole")
+			log.Error(fmt.Sprintf("Could not apply ClusterRole resource %s due to %s", cm.Name, err.Error()))
 			return state.EDeploymentStateCantUpdate, err
 		}
 		log.Debug("ClusterRole updated")

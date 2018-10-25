@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/leangeder/gravitywell/configuration"
 	"github.com/leangeder/gravitywell/state"
-	log "github.com/Sirupsen/logrus"
 	"k8s.io/api/core/v1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -56,7 +56,7 @@ func execV1ServiceResouce(k kubernetes.Interface, ss *v1.Service, namespace stri
 	if commandFlag == configuration.Apply {
 		_, err := ssclient.Update(ss)
 		if err != nil {
-			log.Error("Could not update Service")
+			log.Error(fmt.Sprintf("Could not apply Service resource %s due to %s", ss.Name, err.Error()))
 			return state.EDeploymentStateCantUpdate, err
 		}
 		log.Debug("Service updated")

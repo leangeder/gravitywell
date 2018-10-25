@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/leangeder/gravitywell/configuration"
 	"github.com/leangeder/gravitywell/state"
-	log "github.com/Sirupsen/logrus"
 	v1rbac "k8s.io/api/rbac/v1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -56,7 +56,7 @@ func execV1RbacClusterRoleBindingResouce(k kubernetes.Interface, cm *v1rbac.Clus
 	if commandFlag == configuration.Apply {
 		_, err := cmclient.Update(cm)
 		if err != nil {
-			log.Error("Could not update ClusterRoleBinding")
+			log.Error(fmt.Sprintf("Could not apply ClusterRoleBinding resource %s due to %s", cm.Name, err.Error()))
 			return state.EDeploymentStateCantUpdate, err
 		}
 		log.Debug("ClusterRoleBinding updated")

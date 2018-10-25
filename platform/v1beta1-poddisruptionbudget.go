@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/leangeder/gravitywell/configuration"
 	"github.com/leangeder/gravitywell/state"
-	log "github.com/Sirupsen/logrus"
 	v1polbeta "k8s.io/api/policy/v1beta1"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -55,7 +55,7 @@ func execV1Beta1PodDisruptionBudgetResouce(k kubernetes.Interface, pdb *v1polbet
 	if commandFlag == configuration.Apply {
 		_, err := pdbclient.Update(pdb)
 		if err != nil {
-			log.Error("Could not update PodDisruptionBudget")
+			log.Error(fmt.Sprintf("Could not apply PodDisruptionBudget resource %s due to %s", pdb.Name, err.Error()))
 			return state.EDeploymentStateCantUpdate, err
 		}
 		log.Debug("PodDisruptionBudget updated")

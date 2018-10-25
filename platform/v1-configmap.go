@@ -56,7 +56,7 @@ func execV1ConfigMapResouce(k kubernetes.Interface, cm *v1.ConfigMap, namespace 
 	if commandFlag == configuration.Apply {
 		_, err := cmclient.Update(cm)
 		if err != nil {
-			log.Error("Could not update ConfigMap")
+			log.Error(fmt.Sprintf("Could not apply ConfigMap resource %s due to %s", cm.Name, err.Error()))
 			return state.EDeploymentStateCantUpdate, err
 		}
 		log.Debug("ConfigMap updated")

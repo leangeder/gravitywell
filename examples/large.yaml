@@ -1,25 +1,26 @@
 Kind: Application
-APIVersion: "v1"
-Spec:
-#Build
-  Template:
-    Spec:
-    Applications:
-    - Name: jenkins
-      Metadata:
-        Name: 
-        Labels:
-          App: es-client
-          Component: elasticsearch
-          Role: services
-      Namespace: jenkins
-      Git: "git@github.com:leangeder/devops-kubernetes-jenkins.git"
-      Action:
-      - Execute:
-         Shell: ""
-         Kubectl:
-           Command: replace
-           Path: Deployment
-      Cluster:
-      - Name: gke_sdfsdf
-        Project: trials
+PIVersion: "v1"
+Strategy:
+  - Cluster:
+      Name: "minikube"
+      Deployments:
+        - Deployment:
+           Name: "kubernetes-nifi-cluster"
+           Namespace: "nifi"
+           Git: "git@github.com:AlexsJones/kubernetes-nifi-cluster.git"
+           Action:
+            - Execute:
+               Shell: "ls -la"
+               Kubectl:
+                 Command: replace
+                 Path: statefulset
+        - Deployment:
+            Name: "kubernetes-zookeeper-cluster"
+            Namespace: "zk"
+            Git: "git@github.com:AlexsJones/kubernetes-zookeeper-cluster.git"
+            Action:
+             - Execute:
+                Shell: "./build_environment.sh small"
+                Kubectl:
+                  Path: deployment
+                  Command: replace

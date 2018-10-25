@@ -15,40 +15,50 @@ import (
 	"k8s.io/api/core/v1"
 )
 
+func calculateRepositoryName(gitPath string) string {
+	var extension = filepath.Ext(gitPath)
+	var remoteVCSRepoName = gitPath[0 : len(gitPath)-len(extension)]
+	splitStrings := strings.Split(remoteVCSRepoName, "/")
+	return splitStrings[len(splitStrings)-1]
+}
+
+func ensureRepoExists(tempPath string, gitPath string, sshKeyPath string) (string, error) {
+	repoName := calculateRepositoryName(gitPath)
+	if _, err := os.Stat(path.Join(tempPath, repoName)); os.IsNotExist(err) {
+		log.Info(fmt.Sprintf("Fetching repository %s into %s\n", repoName, path.Join(tempPath, repoName)))
+		gvcs := new(vcs.GitVCS)
+		_, err = vcs.Fetch(gvcs, path.Join(tempPath, repoName), gitPath, sshKeyPath)
+		if err != nil {
+			return repoName, err
+		}
+	} else {
+		log.Debug(fmt.Sprintf("Using existing repository %s", path.Join(tempPath, repoName)))
+	}
+	return repoName, nil
+}
+
 func process(opt configuration.Options, cluster configuration.Application) *state.Capture {
 
 	stateCapture := &state.Capture{
 		ClusterName:     cluster.Name,
 		DeploymentState: make(map[string]state.Details),
 	}
-	//---------------------------------
-	log.Warn(fmt.Sprintf("Switching to cluster: %s\n", cluster.Name))
+
+	log.Info(fmt.Sprintf("Switching to cluster: %s\n", cluster.Name))
 	restclient, k8siface, err := platform.GetKubeClient(cluster.Name)
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
 	}
-	//---------------------------------
-	for _, deployment := range cluster.Deployments {
-		log.Debug(fmt.Sprintf("Loading deployment %s\n", deployment.Deployment.Name))
-		//---------------------------------
-		//Generate name from repo
-		var extension = filepath.Ext(deployment.Deployment.Git)
-		var remoteVCSRepoName = deployment.Deployment.Git[0 : len(deployment.Deployment.Git)-len(extension)]
-		splitStrings := strings.Split(remoteVCSRepoName, "/")
-		remoteVCSRepoName = splitStrings[len(splitStrings)-1]
 
-		if _, err := os.Stat(path.Join(opt.TempVCSPath, remoteVCSRepoName)); os.IsNotExist(err) {
-			log.Debug(fmt.Sprintf("Fetching deployment %s into %s\n", remoteVCSRepoName, path.Join(opt.TempVCSPath, remoteVCSRepoName)))
-			gvcs := new(vcs.GitVCS)
-			_, err = vcs.Fetch(gvcs, path.Join(opt.TempVCSPath, remoteVCSRepoName), deployment.Deployment.Git, opt.SSHKeyPath)
-			if err != nil {
-				log.Error(err.Error())
-				stateCapture.DeploymentState[deployment.Deployment.Name] = state.Details{State: state.EDeploymentStateError}
-				return stateCapture
-			}
-		} else {
-			log.Debug(fmt.Sprintf("Using existing repository %s", path.Join(opt.TempVCSPath, remoteVCSRepoName)))
+	for _, deployment := range cluster.Deployments {
+		log.Info(fmt.Sprintf("Loading deployment %s\n", deployment.Deployment.Name))
+
+		remoteVCSRepoName, err := ensureRepoExists(opt.TempVCSPath, deployment.Deployment.Git, opt.SSHKeyPath)
+		if err != nil {
+			log.Error(err.Error())
+			stateCapture.DeploymentState[deployment.Deployment.Name] = state.Details{State: state.EDeploymentStateError}
+			return stateCapture
 		}
 		//---------------------------------
 		for _, a := range deployment.Deployment.Action {
@@ -88,7 +98,7 @@ func process(opt configuration.Options, cluster configuration.Application) *stat
 
 			}
 			for _, file := range fileList {
-				log.Warn(fmt.Sprintf("Attempting to deploy %s\n", file))
+				log.Debug(fmt.Sprintf("Attempting to deploy %s\n", file))
 				if _, err = os.Stat(file); os.IsNotExist(err) {
 					continue
 				}

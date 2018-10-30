@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/leangeder/gravitywell/configuration"
@@ -70,10 +71,24 @@ func DeployFromFile(config *rest.Config, k kubernetes.Interface, path string, na
 	if err != nil {
 		return state.EDeploymentStateError, err
 	}
+	documents := strings.Split(string(raw), "---")
+	var finalState state.State
+	var finalError error
+	for _, doc := range documents {
+		state, err := DeployRawDoc([]byte(doc), k, namespace, opts, commandFlag)
+		if err != nil {
+			finalState = state
+			finalError = err
+		}
+	}
+	return finalState, finalError
+}
+
+func DeployRawDoc(raw []byte, k kubernetes.Interface, namespace string, opts configuration.Options, commandFlag configuration.CommandFlag) (state.State, error) {
 	decode := scheme.Codecs.UniversalDeserializer().Decode
 	obj, versionKind, err := decode(raw, nil, nil)
 	if versionKind == nil {
-		log.Warn("Ignoring File ", path, ": it doesnt have a Kind")
+		log.Warn("Ignoring Document: it doesnt have a Kind")
 		return state.EDeploymentStateNil, nil
 	}
 

@@ -11,6 +11,11 @@ Strategy:
             Zones: ["us-east4-a"]
             InitialNodeCount: 1
             InitialNodeType: "n1-standard-1"
+            Labels:
+              cluster: logos
+              project: beamery-global
+              region: us-east4
+              environment: globa;
             OauthScopes: "https://www.googleapis.com/auth/monitoring.write,
           https://www.googleapis.com/auth/logging.write,
           https://www.googleapis.com/auth/trace.append,
@@ -21,7 +26,9 @@ Strategy:
                   Name: "poola"
                   Count: 3
                   NodeType: "n1-standard-1"
-                  Labels: "k8s-node-type=test"
+                  Labels:
+                    k8s-node-type: test
+                    vault: true
             PostInstallHook:
               - Execute:
                   Path: "."
